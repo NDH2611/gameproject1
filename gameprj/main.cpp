@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 
     Mouse mouse;
     mouse.x = SCREEN_WIDTH / 2;
-    mouse.y = 580;
+    mouse.y = 880;
 
     bool quit = false;
     SDL_Event event;
