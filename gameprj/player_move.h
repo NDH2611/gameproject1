@@ -33,8 +33,8 @@ void render(const Mouse& mouse, const Graphics& graphics) {
     SDL_Rect filled_rect;
     filled_rect.x = mouse.x;
     filled_rect.y = mouse.y;
-    filled_rect.w = 20;
-    filled_rect.h = 20;
+    filled_rect.w = 15;
+    filled_rect.h = 15;
     SDL_SetRenderDrawColor(graphics.renderer, 255, 255, 255, 255);
     SDL_RenderFillRect(graphics.renderer, &filled_rect);
 }
@@ -45,5 +45,4 @@ bool gameOver(const Mouse& mouse) {
 }
 
 #endif
-
 

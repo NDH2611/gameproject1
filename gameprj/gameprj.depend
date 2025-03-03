@@ -16,3 +16,20 @@
 
 1740059141 c:\users\admin\documents\gameprj (1)\gameprj\player_move.h
 
+1740234523 source:c:\users\admin\documents\gameprj (1)\gameproject1\gameprj\main.cpp
+	<iostream>
+	<SDL.h>
+	<SDL_image.h>
+	"graphics.h"
+	"defs.h"
+	"player_move.h"
+
+1740059141 c:\users\admin\documents\gameprj (1)\gameproject1\gameprj\graphics.h
+	<SDL.h>
+	<SDL_image.h>
+	"defs.h"
+
+1740986461 c:\users\admin\documents\gameprj (1)\gameproject1\gameprj\defs.h
+
+1740059141 c:\users\admin\documents\gameprj (1)\gameproject1\gameprj\player_move.h
+

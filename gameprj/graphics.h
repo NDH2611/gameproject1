@@ -4,12 +4,18 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include "defs.h"
-
+#include "json.hpp"
+using json = nlohmann::json;
 using namespace std;
 
 struct Graphics {
     SDL_Renderer *renderer;
 	SDL_Window *window;
+	SDL_Texture* tilesetTexture;
+
+    int wall;
+    int tilesetColumns;
+    vector<vector<int>> layersData;
 
 	void logErrorAndExit(const char* msg, const char* error)
     {
@@ -18,20 +24,23 @@ struct Graphics {
     }
 
 	void init() {
-        if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
-            logErrorAndExit("SDL_Init", SDL_GetError());
+        if (SDL_Init(SDL_INIT_EVERYTHING) != 0) logErrorAndExit("SDL_Init", SDL_GetError());
 
         window = SDL_CreateWindow(WINDOW_TITLE, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+            if (window == nullptr) logErrorAndExit("CreateWindow", SDL_GetError());
 
-        if (window == nullptr) logErrorAndExit("CreateWindow", SDL_GetError());
+        if (!IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG)) logErrorAndExit( "SDL_image error:", IMG_GetError());
 
-        if (!IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG))
-            logErrorAndExit( "SDL_image error:", IMG_GetError());
+        renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+            if (renderer == nullptr) logErrorAndExit("CreateRenderer", SDL_GetError());
 
-        renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED |
-                                              SDL_RENDERER_PRESENTVSYNC);
+        tilesetTexture = IMG_LoadTexture(renderer, "mapmat.jpg");
+            if (tilesetTexture == nullptr) logErrorAndExit("LoadtilesetTexture", SDL_GetError());
 
-        if (renderer == nullptr) logErrorAndExit("CreateRenderer", SDL_GetError());
+        loadMap("mapprj.tmj");
+            if (!loadMap("mapprj.tmj")) logErrorAndExit("Loadmap", SDL_GetError());
+        renderMap();
+
 
         SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
         SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -88,15 +97,92 @@ struct Graphics {
         SDL_RenderCopy(renderer, texture, src, &dest);
     }
 
+    bool loadMap(const string& filename) {
+        ifstream file(filename);
+        if (!file.is_open()) {
+            cerr << "can't open file" << filename << "\n";
+            return false;
+        }
+
+        json mapJson;
+        try {
+            file >> mapJson;
+        } catch (const exception& e) {
+            cerr << "read err JSON " << e.what() << "\n";
+            return false;
+        }
+        file.close();
+
+        if (!mapJson.contains("tilesets") || mapJson["tilesets"].empty() || !mapJson["tilesets"][0].contains("columns")) {
+            cerr << "can't find tileset\n";
+            return false;
+        }
+        tilesetColumns = mapJson["tilesets"][0]["columns"];
+
+        if (!mapJson.contains("layers") || mapJson["layers"].empty()) {
+            cerr << "can't find layer\n";
+            return false;
+        }
+
+        layersData.clear();
+        for (const auto& layer : mapJson["layers"]) {
+            if (!layer.contains("data")) {
+                cerr << "layer have no data\n";
+                continue;
+            }
+            layersData.push_back(layer["data"].get<vector<int>>());
+        }
+
+        return true;
+    }
+
+    void renderLayer(const vector<int>& tileData) {
+        SDL_Rect srcRect, destRect;
+        srcRect.w = destRect.w = TILE_SIZE;
+        srcRect.h = destRect.h = TILE_SIZE;
+
+        for (int y = 0; y < MAP_HEIGHT; ++y) {
+            for (int x = 0; x < MAP_WIDTH; ++x) {
+                int tileIndex = tileData[y * MAP_WIDTH + x] - 1;
+                if (tileIndex < 0) continue;
+
+                srcRect.x = (tileIndex % tilesetColumns) * TILE_SIZE;
+                srcRect.y = (tileIndex / tilesetColumns) * TILE_SIZE;
+
+                destRect.x = x * TILE_SIZE;
+                destRect.y = y * TILE_SIZE;
+
+                SDL_RenderCopy(renderer, tilesetTexture, &srcRect, &destRect);
+            }
+        }
+    }
+
+    void renderMap() {
+        for (const auto& layer : layersData) {
+            renderLayer(layer);
+        }
+    }
+
+    bool isCollision(int x, int y) {
+        int tileX = x / TILE_SIZE;
+        int tileY = y / TILE_SIZE;
+
+        if (tileX < 0 || tileX >= MAP_WIDTH || tileY < 0 || tileY >= MAP_HEIGHT)
+            return true;
+
+        int tileIndex = layersData[wall][tileY * MAP_WIDTH + tileX];
+        cout << "Tile (" << tileX << ", " << tileY << ") = " << tileIndex << endl;
+        return (tileIndex != 0);
+    }
     void quit()
     {
         IMG_Quit();
-
+        SDL_DestroyTexture(tilesetTexture);
         SDL_DestroyRenderer(renderer);
         SDL_DestroyWindow(window);
+
         SDL_Quit();
     }
-
 };
 
 #endif
