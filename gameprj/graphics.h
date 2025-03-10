@@ -163,17 +163,24 @@ struct Graphics {
         }
     }
 
-    bool isCollision(int x, int y) {
-        int tileX = x / TILE_SIZE;
-        int tileY = y / TILE_SIZE;
+    bool isCollision(int x, int y, int width, int height) {
+        int left = x / TILE_SIZE;
+        int right = (x + width - 1) / TILE_SIZE;
+        int top = y / TILE_SIZE;
+        int bottom = (y + height - 1) / TILE_SIZE;
 
-        if (tileX < 0 || tileX >= MAP_WIDTH || tileY < 0 || tileY >= MAP_HEIGHT)
+        if (left < 0 || right >= MAP_WIDTH || top < 0 || bottom >= MAP_HEIGHT)
             return true;
 
-        int tileIndex = layersData[wall][tileY * MAP_WIDTH + tileX];
-        cout << "Tile (" << tileX << ", " << tileY << ") = " << tileIndex << endl;
-        return (tileIndex != 0);
+        if (layersData[wall][top * MAP_WIDTH + left] != 0 ||
+            layersData[wall][top * MAP_WIDTH + right] != 0 ||
+            layersData[wall][bottom * MAP_WIDTH + left] != 0 ||
+            layersData[wall][bottom * MAP_WIDTH + right] != 0)
+            return true;
+
+        return false;
     }
+
     void quit()
     {
         IMG_Quit();

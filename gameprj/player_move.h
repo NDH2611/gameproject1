@@ -1,7 +1,8 @@
 #ifndef PLAYER_MOVE_H
 #define PLAYER_MOVE_H
 
-#define INITIAL_SPEED 5
+#define INITIAL_SPEED 4
+#define DESTINATION 16
 
 struct Mouse {
     int x, y;
@@ -33,8 +34,8 @@ void render(const Mouse& mouse, const Graphics& graphics) {
     SDL_Rect filled_rect;
     filled_rect.x = mouse.x;
     filled_rect.y = mouse.y;
-    filled_rect.w = 15;
-    filled_rect.h = 15;
+    filled_rect.w = DESTINATION;
+    filled_rect.h = DESTINATION;
     SDL_SetRenderDrawColor(graphics.renderer, 255, 255, 255, 255);
     SDL_RenderFillRect(graphics.renderer, &filled_rect);
 }

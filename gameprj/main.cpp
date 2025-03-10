@@ -65,7 +65,7 @@ int main(int argc, char* argv[]) {
             }
         }
 
-        if (!graphics.isCollision(mouse.x + mouse.dx, mouse.y + mouse.dy)) {
+        if (!graphics.isCollision(mouse.x + mouse.dx, mouse.y + mouse.dy, DESTINATION, DESTINATION)) {
             mouse.move();
         }
 
