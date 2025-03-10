@@ -12,9 +12,14 @@ struct Graphics {
     SDL_Renderer *renderer;
 	SDL_Window *window;
 	SDL_Texture* tilesetTexture;
+    SDL_Texture* tilesetDiamond;
 
     int wall;
+    int diamond;
     int tilesetColumns;
+    int tilesetColumnsDiamond;
+    int firstgidTilesetTexture = 1;
+    int firstgidTilesetDiamond = 1;
     vector<vector<int>> layersData;
 
 	void logErrorAndExit(const char* msg, const char* error)
@@ -35,7 +40,9 @@ struct Graphics {
             if (renderer == nullptr) logErrorAndExit("CreateRenderer", SDL_GetError());
 
         tilesetTexture = IMG_LoadTexture(renderer, "mapmat.jpg");
+        tilesetDiamond = IMG_LoadTexture(renderer, "item.jpg");
             if (tilesetTexture == nullptr) logErrorAndExit("LoadtilesetTexture", SDL_GetError());
+            if (tilesetDiamond == nullptr) logErrorAndExit("LoadtilesetDiamond", SDL_GetError());
 
         loadMap("mapprj.tmj");
             if (!loadMap("mapprj.tmj")) logErrorAndExit("Loadmap", SDL_GetError());
@@ -44,57 +51,6 @@ struct Graphics {
 
         SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
         SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
-    }
-
-    void prepareScene()
-    {
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-        SDL_RenderClear(renderer);
-    }
-
-	void prepareScene(SDL_Texture * background)
-    {
-        SDL_RenderClear(renderer);
-        SDL_RenderCopy( renderer, background, NULL, NULL);
-    }
-
-    void presentScene()
-    {
-        SDL_RenderPresent(renderer);
-    }
-
-    SDL_Texture *loadTexture(const char *filename)
-    {
-        SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "Loading %s", filename);
-
-        SDL_Texture *texture = IMG_LoadTexture(renderer, filename);
-        if (texture == NULL)
-            SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR, "Load texture %s", IMG_GetError());
-
-        return texture;
-    }
-
-    void renderTexture(SDL_Texture *texture, int x, int y)
-    {
-        SDL_Rect dest;
-
-        dest.x = x;
-        dest.y = y;
-        SDL_QueryTexture(texture, NULL, NULL, &dest.w, &dest.h);
-
-        SDL_RenderCopy(renderer, texture, NULL, &dest);
-    }
-
-    void blitRect(SDL_Texture *texture, SDL_Rect *src, int x, int y)
-    {
-        SDL_Rect dest;
-
-        dest.x = x;
-        dest.y = y;
-        dest.w = src->w;
-        dest.h = src->h;
-
-        SDL_RenderCopy(renderer, texture, src, &dest);
     }
 
     bool loadMap(const string& filename) {
@@ -118,6 +74,22 @@ struct Graphics {
             return false;
         }
         tilesetColumns = mapJson["tilesets"][0]["columns"];
+        tilesetColumnsDiamond = mapJson["tilesets"][1]["columns"];
+
+        for (const auto& tileset : mapJson["tilesets"]) {
+            int firstgid = tileset["firstgid"];
+
+            if (tileset.contains("name")) {
+                string name = tileset["name"];
+
+                if (name == "mapmat") {
+                    firstgidTilesetTexture = firstgid;
+                }
+                if (name == "item") {
+                    firstgidTilesetDiamond = firstgid;
+                }
+            }
+        }
 
         if (!mapJson.contains("layers") || mapJson["layers"].empty()) {
             cerr << "can't find layer\n";
@@ -136,30 +108,37 @@ struct Graphics {
         return true;
     }
 
-    void renderLayer(const vector<int>& tileData) {
+    void renderLayer(const vector<int>& tileData, SDL_Texture* texture, int tilesetColumns, int firstgid) {
         SDL_Rect srcRect, destRect;
         srcRect.w = destRect.w = TILE_SIZE;
         srcRect.h = destRect.h = TILE_SIZE;
 
         for (int y = 0; y < MAP_HEIGHT; ++y) {
             for (int x = 0; x < MAP_WIDTH; ++x) {
-                int tileIndex = tileData[y * MAP_WIDTH + x] - 1;
+                int tileID = tileData[y * MAP_WIDTH + x];
+                if (tileID == 0) continue;
+
+                int tileIndex = tileID - firstgid;
                 if (tileIndex < 0) continue;
 
                 srcRect.x = (tileIndex % tilesetColumns) * TILE_SIZE;
                 srcRect.y = (tileIndex / tilesetColumns) * TILE_SIZE;
-
                 destRect.x = x * TILE_SIZE;
                 destRect.y = y * TILE_SIZE;
 
-                SDL_RenderCopy(renderer, tilesetTexture, &srcRect, &destRect);
+                SDL_RenderCopy(renderer, texture, &srcRect, &destRect);
             }
         }
     }
 
     void renderMap() {
-        for (const auto& layer : layersData) {
-            renderLayer(layer);
+        for (size_t i = 0; i < layersData.size(); ++i) {
+            if (i == 1) {
+                renderLayer(layersData[i], tilesetDiamond, tilesetColumnsDiamond, firstgidTilesetDiamond);
+            } else {
+
+                renderLayer(layersData[i], tilesetTexture, tilesetColumns, firstgidTilesetTexture);
+            }
         }
     }
 
