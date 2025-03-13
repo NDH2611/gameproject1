@@ -7,6 +7,8 @@
 #include "defs.h"
 #include "graphics.h"
 #include "player_move.h"
+#include "lootitem.h"
+
 using namespace std;
 
 using json = nlohmann::json;
@@ -18,6 +20,7 @@ int main(int argc, char* argv[]) {
     graphics.init();
 
     graphics.wall = graphics.layersData.size() - 1;
+    graphics.diamond = 1;
 
     Mouse mouse;
     mouse.x = SCREEN_WIDTH / 2;
@@ -67,6 +70,9 @@ int main(int argc, char* argv[]) {
 
         if (!graphics.isCollision(mouse.x + mouse.dx, mouse.y + mouse.dy, DESTINATION, DESTINATION)) {
             mouse.move();
+            if (isCollisionWithdiamond(graphics, mouse.x, mouse.y, DESTINATION, DESTINATION)) {
+                removeDiamond(graphics, mouse.x, mouse.y);
+            }
         }
 
         SDL_RenderClear(graphics.renderer);

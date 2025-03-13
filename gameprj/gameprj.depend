@@ -16,7 +16,7 @@
 
 1740059141 c:\users\admin\documents\gameprj (1)\gameprj\player_move.h
 
-1741623892 source:c:\users\admin\documents\gameprj (1)\gameproject1\gameprj\main.cpp
+1741830672 source:c:\users\admin\documents\gameprj (1)\gameproject1\gameprj\main.cpp
 	<SDL.h>
 	<SDL_image.h>
 	<iostream>
@@ -26,6 +26,7 @@
 	"defs.h"
 	"graphics.h"
 	"player_move.h"
+	"lootitem.h"
 
 1741626428 c:\users\admin\documents\gameprj (1)\gameproject1\gameprj\graphics.h
 	<SDL.h>
@@ -235,4 +236,7 @@
 	<vector>
 	<any>
 	<string_view>
+
+1741830903 c:\users\admin\documents\gameprj (1)\gameproject1\gameprj\lootitem.h
+	"defs.h"
 

@@ -33,6 +33,7 @@
 		</Compiler>
 		<Unit filename="defs.h" />
 		<Unit filename="graphics.h" />
+		<Unit filename="lootitem.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="player_move.h" />
 		<Extensions>
