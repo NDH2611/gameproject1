@@ -2,6 +2,8 @@
 #define LOOT_ITEM_H
 
 #include "defs.h"
+#include "text.h"
+
 int score = 0;
 bool isCollisionWithdiamond(Graphics &graphics, int x, int y, int width, int height) {
     int left = x / TILE_SIZE;

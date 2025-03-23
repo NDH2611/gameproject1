@@ -1,8 +1,10 @@
 #include <SDL.h>
 #include <SDL_image.h>
+#include <SDL_ttf.h>
 #include <iostream>
 #include <fstream>
 #include <vector>
+
 #include "json.hpp"
 #include "defs.h"
 #include "graphics.h"
@@ -13,11 +15,13 @@ using namespace std;
 
 using json = nlohmann::json;
 
-
-
 int main(int argc, char* argv[]) {
     Graphics graphics;
     graphics.init();
+
+    TTF_Font* font = graphics.loadFont("Purisa-BoldOblique.ttf", 32);
+    SDL_Color color = {255, 255, 0, 255};
+    SDL_Texture* scoretxt = graphics.renderText("Score: ", font, color);
 
     graphics.wall = graphics.layersData.size() - 1;
     graphics.diamond = 1;
@@ -28,6 +32,8 @@ int main(int argc, char* argv[]) {
 
     bool running = true;
     SDL_Event event;
+
+
     while (running) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) running = false;
@@ -75,14 +81,19 @@ int main(int argc, char* argv[]) {
             }
         }
 
+
         SDL_RenderClear(graphics.renderer);
         graphics.renderMap();
+        graphics.renderTexture(scoretxt, 400, 700);
         render(mouse, graphics);
         SDL_RenderPresent(graphics.renderer);
 
         SDL_Delay(10);
     }
 
+    SDL_DestroyTexture( scoretxt );
+    scoretxt = NULL;
+    TTF_CloseFont( font );
     graphics.quit();
     return 0;
 }
