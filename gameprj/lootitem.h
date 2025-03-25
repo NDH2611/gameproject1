@@ -2,7 +2,7 @@
 #define LOOT_ITEM_H
 
 #include "defs.h"
-#include "text.h"
+
 
 int score = 0;
 bool isCollisionWithdiamond(Graphics &graphics, int x, int y, int width, int height) {
@@ -22,13 +22,21 @@ bool isCollisionWithdiamond(Graphics &graphics, int x, int y, int width, int hei
     return false;
 }
 
-void removeDiamond(Graphics &graphics, int x, int y) {
-    int tileX = x / TILE_SIZE;
-    int tileY = y / TILE_SIZE;
-    int index = tileY * MAP_WIDTH + tileX;
+void removeDiamond(Graphics &graphics, int x, int y, int width, int height) {
+    int left = x / TILE_SIZE;
+    int right = (x + width - 1) / TILE_SIZE;
+    int top = y / TILE_SIZE;
+    int bottom = (y + height - 1) / TILE_SIZE;
 
-    if (graphics.layersData[1][index] != 0) {
-        graphics.layersData[1][index] = 0;
+    if (graphics.layersData[graphics.diamond][top * MAP_WIDTH + left] != 0 ||
+    graphics.layersData[graphics.diamond][top * MAP_WIDTH + right] != 0 ||
+    graphics.layersData[graphics.diamond][bottom * MAP_WIDTH + left] != 0 ||
+    graphics.layersData[graphics.diamond][bottom * MAP_WIDTH + right] != 0)
+    {
+        graphics.layersData[graphics.diamond][top * MAP_WIDTH + left] = 0;
+        graphics.layersData[graphics.diamond][top * MAP_WIDTH + right] = 0;
+        graphics.layersData[graphics.diamond][bottom * MAP_WIDTH + left] = 0;
+        graphics.layersData[graphics.diamond][bottom * MAP_WIDTH + right] = 0;
     }
 }
 

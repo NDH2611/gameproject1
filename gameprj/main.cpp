@@ -15,32 +15,15 @@ using namespace std;
 
 using json = nlohmann::json;
 
-int main(int argc, char* argv[]) {
-    Graphics graphics;
-    graphics.init();
-
-    TTF_Font* font = graphics.loadFont("Purisa-BoldOblique.ttf", 32);
-    SDL_Color color = {255, 255, 0, 255};
-    SDL_Texture* scoretxt = graphics.renderText("Score: ", font, color);
-
-    graphics.wall = graphics.layersData.size() - 1;
-    graphics.diamond = 1;
-
-    Mouse mouse;
-    mouse.x = SCREEN_WIDTH / 2;
-    mouse.y = 680;
-
+void running_Main_Game(Graphics &graphics, Mouse &mouse, SDL_Texture* scoretxt, TTF_Font* font) {
     bool running = true;
     SDL_Event event;
-
 
     while (running) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) running = false;
-            if (event.type == SDL_KEYDOWN)
-            {
-                switch (event.key.keysym.scancode)
-                {
+            if (event.type == SDL_KEYDOWN) {
+                switch (event.key.keysym.scancode) {
                     case SDL_SCANCODE_W:
                         mouse.turnNorth();
                         break;
@@ -52,14 +35,12 @@ int main(int argc, char* argv[]) {
                         break;
                     case SDL_SCANCODE_D:
                         mouse.turnEast();
-
                         break;
                     default:
                         break;
                 }
             }
-            if (event.type == SDL_KEYUP)
-            {
+            if (event.type == SDL_KEYUP) {
                 switch (event.key.keysym.scancode) {
                     case SDL_SCANCODE_W:
                     case SDL_SCANCODE_S:
@@ -77,10 +58,10 @@ int main(int argc, char* argv[]) {
         if (!graphics.isCollision(mouse.x + mouse.dx, mouse.y + mouse.dy, DESTINATION, DESTINATION)) {
             mouse.move();
             if (isCollisionWithdiamond(graphics, mouse.x, mouse.y, DESTINATION, DESTINATION)) {
-                removeDiamond(graphics, mouse.x, mouse.y);
+                removeDiamond(graphics, mouse.x, mouse.y, DESTINATION, DESTINATION);
+                cout << score << " ";
             }
         }
-
 
         SDL_RenderClear(graphics.renderer);
         graphics.renderMap();
@@ -90,12 +71,31 @@ int main(int argc, char* argv[]) {
 
         SDL_Delay(10);
     }
+}
 
-    SDL_DestroyTexture( scoretxt );
-    scoretxt = NULL;
-    TTF_CloseFont( font );
+int main(int argc, char* argv[]) {
+    Graphics graphics;
+    graphics.init();
+
+    TTF_Font* font = graphics.loadFont("Purisa-BoldOblique.ttf", 32);
+    SDL_Color color = {255, 255, 0, 255};
+    SDL_Texture* scoretxt = graphics.renderText("Score: ", font, color);
+
+    graphics.wall = graphics.layersData.size() - 1;
+    graphics.diamond = 1;
+
+    Mouse mouse;
+    mouse.x = SCREEN_WIDTH / 2;
+    mouse.y = 680;
+
+    running_Main_Game(graphics, mouse, scoretxt, font);
+
+    SDL_DestroyTexture(scoretxt);
+    TTF_CloseFont(font);
     graphics.quit();
     return 0;
 }
+
+
 
 
