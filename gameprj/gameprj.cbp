@@ -36,6 +36,7 @@
 		<Unit filename="lootitem.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="player_move.h" />
+		<Unit filename="time.h" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>

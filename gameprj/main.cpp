@@ -10,6 +10,7 @@
 #include "graphics.h"
 #include "player_move.h"
 #include "lootitem.h"
+#include "time.h"
 
 using namespace std;
 
@@ -20,6 +21,8 @@ void running_Main_Game(Graphics &graphics, Mouse &mouse, SDL_Texture* scoretxt, 
     SDL_Event event;
 
     while (running) {
+        Uint32 remainingTime = time_count_down(startTime, countdownTime);
+
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) running = false;
             if (event.type == SDL_KEYDOWN) {
@@ -63,6 +66,10 @@ void running_Main_Game(Graphics &graphics, Mouse &mouse, SDL_Texture* scoretxt, 
             }
         }
 
+        if (remainingTime == 0) {
+            running = false;
+        }
+
         SDL_RenderClear(graphics.renderer);
         graphics.renderMap();
         graphics.renderTexture(scoretxt, 400, 700);
@@ -70,6 +77,7 @@ void running_Main_Game(Graphics &graphics, Mouse &mouse, SDL_Texture* scoretxt, 
         SDL_RenderPresent(graphics.renderer);
 
         SDL_Delay(10);
+
     }
 }
 
