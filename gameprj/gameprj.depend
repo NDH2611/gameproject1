@@ -240,7 +240,7 @@
 1741830903 c:\users\admin\documents\gameprj (1)\gameproject1\gameprj\lootitem.h
 	"defs.h"
 
-1742927607 source:c:\users\admin\onedrive\documents\gameprj (1)\gameproject1\gameprj\main.cpp
+1743419252 source:c:\users\admin\onedrive\documents\gameprj (1)\gameproject1\gameprj\main.cpp
 	<SDL.h>
 	<SDL_image.h>
 	<SDL_ttf.h>
@@ -253,6 +253,7 @@
 	"player_move.h"
 	"lootitem.h"
 	"time.h"
+	"game_play.h"
 
 1740237097 c:\users\admin\onedrive\documents\gameprj (1)\gameproject1\gameprj\json.hpp
 	<algorithm>
@@ -463,13 +464,15 @@
 
 1742878207 c:\users\admin\onedrive\documents\gameprj (1)\gameproject1\gameprj\player_move.h
 
-1742878098 c:\users\admin\onedrive\documents\gameprj (1)\gameproject1\gameprj\lootitem.h
+1743418395 c:\users\admin\onedrive\documents\gameprj (1)\gameproject1\gameprj\lootitem.h
 	"defs.h"
 
 1742715780 c:\users\admin\onedrive\documents\gameprj (1)\gameproject1\gameprj\text.h
 	"defs.h"
 	"graphics.h"
 
-1742927760 c:\users\admin\onedrive\documents\gameprj (1)\gameproject1\gameprj\time.h
+1743048727 c:\users\admin\onedrive\documents\gameprj (1)\gameproject1\gameprj\time.h
 	<SDL.h>
+
+1743419554 c:\users\admin\onedrive\documents\gameprj (1)\gameproject1\gameprj\game_play.h
 

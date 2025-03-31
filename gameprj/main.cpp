@@ -11,81 +11,18 @@
 #include "player_move.h"
 #include "lootitem.h"
 #include "time.h"
-
+#include "game_play.h"
 using namespace std;
 
 using json = nlohmann::json;
 
-void running_Main_Game(Graphics &graphics, Mouse &mouse, SDL_Texture* scoretxt, TTF_Font* font) {
-    bool running = true;
-    SDL_Event event;
 
-    while (running) {
-        Uint32 remainingTime = time_count_down(startTime, countdownTime);
-
-        while (SDL_PollEvent(&event)) {
-            if (event.type == SDL_QUIT) running = false;
-            if (event.type == SDL_KEYDOWN) {
-                switch (event.key.keysym.scancode) {
-                    case SDL_SCANCODE_W:
-                        mouse.turnNorth();
-                        break;
-                    case SDL_SCANCODE_S:
-                        mouse.turnSouth();
-                        break;
-                    case SDL_SCANCODE_A:
-                        mouse.turnWest();
-                        break;
-                    case SDL_SCANCODE_D:
-                        mouse.turnEast();
-                        break;
-                    default:
-                        break;
-                }
-            }
-            if (event.type == SDL_KEYUP) {
-                switch (event.key.keysym.scancode) {
-                    case SDL_SCANCODE_W:
-                    case SDL_SCANCODE_S:
-                    case SDL_SCANCODE_A:
-                    case SDL_SCANCODE_D:
-                        mouse.dx = 0;
-                        mouse.dy = 0;
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-
-        if (!graphics.isCollision(mouse.x + mouse.dx, mouse.y + mouse.dy, DESTINATION, DESTINATION)) {
-            mouse.move();
-            if (isCollisionWithdiamond(graphics, mouse.x, mouse.y, DESTINATION, DESTINATION)) {
-                removeDiamond(graphics, mouse.x, mouse.y, DESTINATION, DESTINATION);
-                cout << score << " ";
-            }
-        }
-
-        if (remainingTime == 0) {
-            running = false;
-        }
-
-        SDL_RenderClear(graphics.renderer);
-        graphics.renderMap();
-        graphics.renderTexture(scoretxt, 400, 700);
-        render(mouse, graphics);
-        SDL_RenderPresent(graphics.renderer);
-
-        SDL_Delay(10);
-
-    }
-}
 
 int main(int argc, char* argv[]) {
     Graphics graphics;
     graphics.init();
 
-    TTF_Font* font = graphics.loadFont("Purisa-BoldOblique.ttf", 32);
+    TTF_Font* font = graphics.loadFont("Purisa-BoldOblique.ttf", 25);
     SDL_Color color = {255, 255, 0, 255};
     SDL_Texture* scoretxt = graphics.renderText("Score: ", font, color);
 

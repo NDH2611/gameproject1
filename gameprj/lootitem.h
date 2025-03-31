@@ -4,7 +4,6 @@
 #include "defs.h"
 
 
-int score = 0;
 bool isCollisionWithdiamond(Graphics &graphics, int x, int y, int width, int height) {
     int left = x / TILE_SIZE;
     int right = (x + width - 1) / TILE_SIZE;
@@ -16,7 +15,6 @@ bool isCollisionWithdiamond(Graphics &graphics, int x, int y, int width, int hei
         graphics.layersData[graphics.diamond][bottom * MAP_WIDTH + left] != 0 ||
         graphics.layersData[graphics.diamond][bottom * MAP_WIDTH + right] != 0)
         {
-            score += 10;
             return true;
         }
     return false;

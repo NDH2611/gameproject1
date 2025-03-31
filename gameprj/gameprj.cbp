@@ -32,6 +32,7 @@
 			<Add option="-Wall" />
 		</Compiler>
 		<Unit filename="defs.h" />
+		<Unit filename="game_play.h" />
 		<Unit filename="graphics.h" />
 		<Unit filename="lootitem.h" />
 		<Unit filename="main.cpp" />
