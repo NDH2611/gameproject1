@@ -1,11 +1,6 @@
 #ifndef _GRAPHICS__H
 #define _GRAPHICS__H
 
-#include <SDL.h>
-#include <SDL_image.h>
-#include "defs.h"
-#include "json.hpp"
-
 using json = nlohmann::json;
 using namespace std;
 
@@ -22,6 +17,7 @@ struct Graphics {
     int firstgidTilesetTexture = 1;
     int firstgidTilesetDiamond = 1;
     vector<vector<int>> layersData;
+    vector<int> originalDiamondLayer;
 
 	void logErrorAndExit(const char* msg, const char* error)
     {
@@ -42,6 +38,17 @@ struct Graphics {
 
         tilesetTexture = IMG_LoadTexture(renderer, "mapmat.jpg");
         tilesetDiamond = IMG_LoadTexture(renderer, "item.jpg");
+                            /*
+                            SDL_Surface* tempSurface = IMG_Load("item.jpg");
+                            if (!tempSurface) logErrorAndExit("LoadSurface for item.jpg", IMG_GetError());
+
+                            SDL_SetColorKey(tempSurface, SDL_TRUE, SDL_MapRGB(tempSurface->format, 98, 96, 96));
+
+                            tilesetDiamond = SDL_CreateTextureFromSurface(renderer, tempSurface);
+                            if (!tilesetDiamond) logErrorAndExit("CreateTextureFromSurface for item.jpg", SDL_GetError());
+
+                            SDL_FreeSurface(tempSurface);
+                            */
             if (tilesetTexture == nullptr) logErrorAndExit("LoadtilesetTexture", SDL_GetError());
             if (tilesetDiamond == nullptr) logErrorAndExit("LoadtilesetDiamond", SDL_GetError());
 
@@ -107,7 +114,12 @@ struct Graphics {
                 cerr << "layer have no data\n";
                 continue;
             }
-            layersData.push_back(layer["data"].get<vector<int>>());
+            auto layerData = layer["data"].get<vector<int>>();
+            layersData.push_back(layerData);
+
+            if (layer["name"] == "diamond") {
+                originalDiamondLayer = layerData;
+            }
         }
 
         return true;

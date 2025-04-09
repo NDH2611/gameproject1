@@ -40,10 +40,29 @@ void render(const Mouse& mouse, const Graphics& graphics) {
     SDL_RenderFillRect(graphics.renderer, &filled_rect);
 }
 
-bool gameOver(const Mouse& mouse) {
-    return mouse.x < 0 || mouse.x >= SCREEN_WIDTH ||
-           mouse.y < 0 || mouse.y >= SCREEN_HEIGHT;
+void keyboard(SDL_Event &event, Mouse &mouse)
+{
+    if (event.type == SDL_KEYDOWN) {
+        switch (event.key.keysym.scancode) {
+            case SDL_SCANCODE_W: mouse.turnNorth(); break;
+            case SDL_SCANCODE_S: mouse.turnSouth(); break;
+            case SDL_SCANCODE_A: mouse.turnWest(); break;
+            case SDL_SCANCODE_D: mouse.turnEast(); break;
+            default: break;
+        }
+    }
+    if (event.type == SDL_KEYUP) {
+        switch (event.key.keysym.scancode) {
+            case SDL_SCANCODE_W:
+            case SDL_SCANCODE_S:
+            case SDL_SCANCODE_A:
+            case SDL_SCANCODE_D:
+                mouse.dx = 0;
+                mouse.dy = 0;
+                break;
+            default: break;
+        }
+    }
 }
-
 #endif
 

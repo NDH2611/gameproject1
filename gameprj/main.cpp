@@ -12,30 +12,29 @@
 #include "lootitem.h"
 #include "time.h"
 #include "game_play.h"
+#include "game_state.h"
 using namespace std;
-
-using json = nlohmann::json;
-
-
 
 int main(int argc, char* argv[]) {
     Graphics graphics;
     graphics.init();
 
-    TTF_Font* font = graphics.loadFont("Purisa-BoldOblique.ttf", 25);
+    TTF_Font* font = graphics.loadFont("PressStart2P-Regular.ttf", 15);
     SDL_Color color = {255, 255, 0, 255};
     SDL_Texture* scoretxt = graphics.renderText("Score: ", font, color);
+    SDL_Texture* timetxt = graphics.renderText("Time: ", font, color);
 
     graphics.wall = graphics.layersData.size() - 1;
     graphics.diamond = 1;
 
     Mouse mouse;
     mouse.x = SCREEN_WIDTH / 2;
-    mouse.y = 680;
+    mouse.y = 752;
 
-    running_Main_Game(graphics, mouse, scoretxt, font);
+    running_Main_Game(graphics, mouse, scoretxt, timetxt, font);
 
     SDL_DestroyTexture(scoretxt);
+    SDL_DestroyTexture(timetxt);
     TTF_CloseFont(font);
     graphics.quit();
     return 0;
