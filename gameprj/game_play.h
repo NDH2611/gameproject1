@@ -3,23 +3,29 @@
 #include "game_state.h"
 
 void running_Main_Game(Graphics &graphics, Mouse &mouse, SDL_Texture* scoretxt, SDL_Texture* timetxt, TTF_Font* font) {
-    GameState gameState = GAME_RUNNING;
+    GameState gameState;
+    gameState = GAME_RUNNING;
     bool running = true;
     int score = 0;
     SDL_Color color_score = {255, 255, 255, 255};
     SDL_Texture* iscore = graphics.renderText(to_string(score).c_str(), font, color_score);
+    SDL_Texture* iTime = nullptr;
+    Uint32 previousRemainingTime = -1;
     SDL_Event event;
 
     while (running) {
-
         if (gameState == GAME_RUNNING) {
             remainingTime = time_count_down(startTime, countdownTime, totalPausedTime)/1000;
-            cachedRemainingTime = remainingTime;  // Lưu lại để dùng khi pause
+            cachedRemainingTime = remainingTime;
         }
         else {
-            remainingTime = cachedRemainingTime;  // Không cập nhật khi pause
+            remainingTime = cachedRemainingTime;
         }
-        SDL_Texture* iTime = graphics.renderText(to_string(remainingTime).c_str(), font, color_score);
+        if (remainingTime != previousRemainingTime) {
+            previousRemainingTime = remainingTime;
+            if (iTime) SDL_DestroyTexture(iTime);
+            iTime = graphics.renderText(to_string(remainingTime).c_str(), font, color_score);
+        }
 
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
@@ -60,15 +66,13 @@ void running_Main_Game(Graphics &graphics, Mouse &mouse, SDL_Texture* scoretxt, 
         }
 
         if (gameState != GAME_RUNNING) {
-            // Render the game state if it's paused or game over
+            graphics.renderCachedMap();
             renderGameState(graphics, mouse, scoretxt, timetxt, font, gameState, iscore, iTime);
-            SDL_DestroyTexture(iTime);
-            SDL_Delay(16);  // Smooth pause rendering
+            SDL_Delay(16);
             lastTime = SDL_GetTicks();
             continue;
         }
 
-        // Move the mouse and check for collisions
         if (!graphics.isCollision(mouse.x + mouse.dx, mouse.y + mouse.dy, DESTINATION, DESTINATION)) {
             mouse.move();
             if (isCollisionWithdiamond(graphics, mouse.x, mouse.y, DESTINATION, DESTINATION)) {
@@ -79,21 +83,17 @@ void running_Main_Game(Graphics &graphics, Mouse &mouse, SDL_Texture* scoretxt, 
             }
         }
 
-        // If the remaining time reaches zero, end the game
         if (remainingTime == 0) gameState = GAME_OVER;
 
-        // Render the game state
+        graphics.renderCachedMap();
         renderGameState(graphics, mouse, scoretxt, timetxt, font, gameState, iscore, iTime);
-        SDL_DestroyTexture(iTime);
 
-        // Control frame rate
         Uint32 frameTime = SDL_GetTicks() - lastTime;
         if (frameTime < 10) SDL_Delay(10 - frameTime);
         lastTime = SDL_GetTicks();
     }
-
-    // Cleanup
     SDL_DestroyTexture(iscore);
+    SDL_DestroyTexture(iTime);
 }
 
 #endif

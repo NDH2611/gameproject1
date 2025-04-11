@@ -32,11 +32,14 @@
 			<Add option="-Wall" />
 		</Compiler>
 		<Unit filename="defs.h" />
+		<Unit filename="game.h" />
 		<Unit filename="game_play.h" />
 		<Unit filename="game_state.h" />
 		<Unit filename="graphics.h" />
 		<Unit filename="lootitem.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="menu.h" />
+		<Unit filename="mode.h" />
 		<Unit filename="player_move.h" />
 		<Unit filename="time.h" />
 		<Extensions>
