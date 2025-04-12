@@ -3,7 +3,7 @@
 
 Uint32 remainingTime = 0;
 Uint32 cachedRemainingTime = 0;
-Uint32 countdownTime;
+Uint32 countdownTime = Time_EASY * 1000;
 Uint32 startTime = SDL_GetTicks(), lastTime = SDL_GetTicks();
 Uint32 totalPausedTime = 0, pauseStartTime = 0;
 

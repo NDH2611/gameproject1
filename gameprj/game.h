@@ -38,8 +38,8 @@ void handleAllEvents(Graphics &graphics, Mouse &mouse, ScreenState &currentScree
             if (selectedMode != STATE_MODE) {
                 setTimeMode(selectedMode);
                 currentMode = selectedMode;
-                mouse.x = SCREEN_WIDTH / 2;
-                mouse.y = 752;
+                mouse.x = X_SPAWN;
+                mouse.y = Y_SPAWN;
                 graphics.layersData[graphics.diamond] = graphics.originalDiamondLayer;
 
                 currentScreen = SCREEN_MENU;
@@ -68,11 +68,16 @@ void renderScreen(ScreenState &currentScreen, ModeState &currentMode, Graphics &
         case SCREEN_GAME:
             resetTimer();
             running_Main_Game(graphics, mouse, scoretxt, timetxt, font);
+            graphics.layersData[graphics.diamond] = graphics.originalDiamondLayer;
+            mouse.x = X_SPAWN;
+            mouse.y = Y_SPAWN;
             currentScreen = SCREEN_MENU;
             break;
         case SCREEN_HELP:
             cout << "Hướng dẫn sử dụng...\n";
             currentScreen = SCREEN_MENU;
+            break;
+        default:
             break;
     }
 

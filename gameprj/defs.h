@@ -10,5 +10,20 @@ const int Time_EASY = 100;
 const int Time_HARD = 50;
 const int Time_ASIAN = 10;
 const char* WINDOW_TITLE = "NDH's Game";
+const int X_SPAWN = SCREEN_WIDTH / 2;
+const int Y_SPAWN = 735;
+
+const char* MAN_SPRITE_FILE = "img\\bo_hong.png";
+const char* MAN_SPRITE_UP_FILE = "img\\bo_hong_up.png";
+const int MAN_CLIPS[][4] = {
+    {  0, 0, 32, 32},
+    { 32, 0, 32, 32},
+    { 64, 0, 32, 32},
+    { 96, 0, 32, 32}
+};
+const int MAN_FRAMES = sizeof(MAN_CLIPS)/sizeof(int)/4;
+
+
+
 
 #endif

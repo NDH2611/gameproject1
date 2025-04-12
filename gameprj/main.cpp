@@ -26,20 +26,23 @@ int main(int argc, char* argv[]) {
     SDL_Color color = {255, 255, 0, 255};
     SDL_Texture* scoretxt = graphics.renderText("Score: ", font, color);
     SDL_Texture* timetxt = graphics.renderText("Time: ", font, color);
-    SDL_Texture* background = graphics.loadTexture("background.jpg");
+    SDL_Texture* background = graphics.getOrLoadTexture("background.jpg");
     graphics.wall = graphics.layersData.size() - 1;
     graphics.diamond = 1;
 
     Mouse mouse;
-    mouse.x = SCREEN_WIDTH / 2;
-    mouse.y = 752;
+    graphics.textureCache["mouse_down"] = graphics.loadTextureWithColorKey(graphics.renderer, MAN_SPRITE_FILE, 255, 255, 255);
+    graphics.textureCache["mouse_up"] = graphics.loadTextureWithColorKey(graphics.renderer, MAN_SPRITE_UP_FILE, 255, 255, 255);
 
-    //running_Main_Game(graphics, mouse, scoretxt, timetxt, font);
+    mouse.initSprite(graphics.textureCache["mouse_down"], MAN_FRAMES, MAN_CLIPS);
+    mouse.initSprite(graphics.textureCache["mouse_up"], MAN_FRAMES, MAN_CLIPS, true);
+    mouse.x = X_SPAWN;
+    mouse.y = Y_SPAWN;
+
     run_Game(graphics, mouse, scoretxt, timetxt, font, background);
 
     SDL_DestroyTexture(scoretxt);
     SDL_DestroyTexture(timetxt);
-    SDL_DestroyTexture(background);
     TTF_CloseFont(font);
     graphics.quit();
     return 0;

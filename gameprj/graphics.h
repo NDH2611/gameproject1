@@ -1,258 +1,3 @@
-//#ifndef _GRAPHICS__H
-//#define _GRAPHICS__H
-//
-//using json = nlohmann::json;
-//using namespace std;
-//
-//struct Graphics {
-//    SDL_Renderer *renderer;
-//	SDL_Window *window;
-//	SDL_Texture* tilesetTexture;
-//    SDL_Texture* tilesetDiamond;
-//    SDL_Texture* cachedMapTexture = nullptr;
-//
-//    int wall;
-//    int diamond;
-//    int tilesetColumns;
-//    int tilesetColumnsDiamond;
-//    int firstgidTilesetTexture = 1;
-//    int firstgidTilesetDiamond = 1;
-//    vector<vector<int>> layersData;
-//    vector<int> originalDiamondLayer;
-//
-//	void logErrorAndExit(const char* msg, const char* error)
-//    {
-//        SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR, "%s: %s", msg, error);
-//        SDL_Quit();
-//    }
-//
-//    void cacheRenderMap() {
-//        cachedMapTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, SCREEN_WIDTH, SCREEN_HEIGHT);
-//        SDL_SetRenderTarget(renderer, cachedMapTexture);
-//        renderMap();
-//        SDL_SetRenderTarget(renderer, nullptr);
-//    }
-//
-//    void renderCachedMap() {
-//        if (cachedMapTexture) {
-//            SDL_RenderCopy(renderer, cachedMapTexture, nullptr, nullptr);
-//        }
-//    }
-//
-//	void init() {
-//        if (SDL_Init(SDL_INIT_EVERYTHING) != 0) logErrorAndExit("SDL_Init", SDL_GetError());
-//
-//        window = SDL_CreateWindow(WINDOW_TITLE, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-//            if (window == nullptr) logErrorAndExit("CreateWindow", SDL_GetError());
-//
-//        if (!IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG)) logErrorAndExit( "SDL_image error:", IMG_GetError());
-//
-//        renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-//            if (renderer == nullptr) logErrorAndExit("CreateRenderer", SDL_GetError());
-//
-//        tilesetTexture = IMG_LoadTexture(renderer, "mapmat.jpg");
-//        tilesetDiamond = IMG_LoadTexture(renderer, "item.jpg");
-//                            /*
-//                            SDL_Surface* tempSurface = IMG_Load("item.jpg");
-//                            if (!tempSurface) logErrorAndExit("LoadSurface for item.jpg", IMG_GetError());
-//
-//                            SDL_SetColorKey(tempSurface, SDL_TRUE, SDL_MapRGB(tempSurface->format, 98, 96, 96));
-//
-//                            tilesetDiamond = SDL_CreateTextureFromSurface(renderer, tempSurface);
-//                            if (!tilesetDiamond) logErrorAndExit("CreateTextureFromSurface for item.jpg", SDL_GetError());
-//
-//                            SDL_FreeSurface(tempSurface);
-//                            */
-//            if (tilesetTexture == nullptr) logErrorAndExit("LoadtilesetTexture", SDL_GetError());
-//            if (tilesetDiamond == nullptr) logErrorAndExit("LoadtilesetDiamond", SDL_GetError());
-//
-//        loadMap("mapprj.tmj");
-//            if (!loadMap("mapprj.tmj")) logErrorAndExit("Loadmap", SDL_GetError());
-//        renderMap();
-//
-//
-//        SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
-//        SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
-//
-//        if (TTF_Init() == -1) {
-//            logErrorAndExit("SDL_ttf could not initialize! SDL_ttf Error: ", TTF_GetError());
-//        }
-//    }
-//
-//    bool loadMap(const string& filename) {
-//        ifstream file(filename);
-//        if (!file.is_open()) {
-//            cerr << "can't open file" << filename << "\n";
-//            return false;
-//        }
-//
-//        json mapJson;
-//        try {
-//            file >> mapJson;
-//        } catch (const exception& e) {
-//            cerr << "read err JSON " << e.what() << "\n";
-//            return false;
-//        }
-//        file.close();
-//
-//        if (!mapJson.contains("tilesets") || mapJson["tilesets"].empty() || !mapJson["tilesets"][0].contains("columns")) {
-//            cerr << "can't find tileset\n";
-//            return false;
-//        }
-//        tilesetColumns = mapJson["tilesets"][0]["columns"];
-//        tilesetColumnsDiamond = mapJson["tilesets"][1]["columns"];
-//
-//        for (const auto& tileset : mapJson["tilesets"]) {
-//            int firstgid = tileset["firstgid"];
-//
-//            if (tileset.contains("name")) {
-//                string name = tileset["name"];
-//
-//                if (name == "mapmat") {
-//                    firstgidTilesetTexture = firstgid;
-//                }
-//                if (name == "item") {
-//                    firstgidTilesetDiamond = firstgid;
-//                }
-//            }
-//        }
-//
-//        if (!mapJson.contains("layers") || mapJson["layers"].empty()) {
-//            cerr << "can't find layer\n";
-//            return false;
-//        }
-//
-//        layersData.clear();
-//        for (const auto& layer : mapJson["layers"]) {
-//            if (!layer.contains("data")) {
-//                cerr << "layer have no data\n";
-//                continue;
-//            }
-//            auto layerData = layer["data"].get<vector<int>>();
-//            layersData.push_back(layerData);
-//
-//            if (layer["name"] == "diamond") {
-//                originalDiamondLayer = layerData;
-//            }
-//        }
-//
-//        return true;
-//    }
-//
-//    void renderLayer(const vector<int>& tileData, SDL_Texture* texture, int tilesetColumns, int firstgid) {
-//        SDL_Rect srcRect, destRect;
-//        srcRect.w = destRect.w = TILE_SIZE;
-//        srcRect.h = destRect.h = TILE_SIZE;
-//
-//        for (int y = 0; y < MAP_HEIGHT; ++y) {
-//            for (int x = 0; x < MAP_WIDTH; ++x) {
-//                int tileID = tileData[y * MAP_WIDTH + x];
-//                if (tileID == 0) continue;
-//
-//                int tileIndex = tileID - firstgid;
-//                if (tileIndex < 0) continue;
-//
-//                srcRect.x = (tileIndex % tilesetColumns) * TILE_SIZE;
-//                srcRect.y = (tileIndex / tilesetColumns) * TILE_SIZE;
-//                destRect.x = x * TILE_SIZE;
-//                destRect.y = y * TILE_SIZE;
-//
-//                SDL_RenderCopy(renderer, texture, &srcRect, &destRect);
-//            }
-//        }
-//    }
-//
-//    void renderMap() {
-//        for (size_t i = 0; i < layersData.size(); ++i) {
-//            if (i == 1) {
-//                renderLayer(layersData[i], tilesetDiamond, tilesetColumnsDiamond, firstgidTilesetDiamond);
-//            } else {
-//
-//                renderLayer(layersData[i], tilesetTexture, tilesetColumns, firstgidTilesetTexture);
-//            }
-//        }
-//    }
-//
-//    bool isCollision(int x, int y, int width, int height) {
-//        int left = x / TILE_SIZE;
-//        int right = (x + width - 1) / TILE_SIZE;
-//        int top = y / TILE_SIZE;
-//        int bottom = (y + height - 1) / TILE_SIZE;
-//
-//        if (left < 0 || right >= MAP_WIDTH || top < 0 || bottom >= MAP_HEIGHT)
-//            return true;
-//
-//        if (layersData[wall][top * MAP_WIDTH + left] != 0 ||
-//            layersData[wall][top * MAP_WIDTH + right] != 0 ||
-//            layersData[wall][bottom * MAP_WIDTH + left] != 0 ||
-//            layersData[wall][bottom * MAP_WIDTH + right] != 0)
-//            return true;
-//
-//        return false;
-//    }
-//
-//    TTF_Font* loadFont(const char* path, int size)
-//    {
-//        TTF_Font* gFont = TTF_OpenFont( path, size );
-//        if (gFont == nullptr) {
-//            SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR, "Load font %s", TTF_GetError());
-//        }
-//        return gFont;
-//    }
-//
-//    SDL_Texture* renderText(const char* text, TTF_Font* font, SDL_Color textColor)
-//    {
-//        SDL_Surface* textSurface = TTF_RenderText_Solid( font, text, textColor );
-//        if( textSurface == nullptr ) {
-//            SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR, "Render text surface %s", TTF_GetError());
-//            return nullptr;
-//        }
-//
-//        SDL_Texture* texture = SDL_CreateTextureFromSurface( renderer, textSurface );
-//        if( texture == nullptr ) {
-//            SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR, "Create texture from text %s", SDL_GetError());
-//        }
-//
-//        SDL_FreeSurface( textSurface );
-//        return texture;
-//    }
-//
-//    void renderTexture(SDL_Texture *texture, int x, int y)
-//    {
-//        SDL_Rect dest;
-//
-//        dest.x = x;
-//        dest.y = y;
-//        SDL_QueryTexture(texture, NULL, NULL, &dest.w, &dest.h);
-//
-//        SDL_RenderCopy(renderer, texture, NULL, &dest);
-//    }
-//
-//    SDL_Texture *loadTexture(const char *filename)
-//    {
-//        SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "Loading %s", filename);
-//
-//        SDL_Texture *texture = IMG_LoadTexture(renderer, filename);
-//        if (texture == NULL)
-//            SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR, "Load texture %s", IMG_GetError());
-//
-//        return texture;
-//    }
-//
-//    void quit()
-//    {
-//        IMG_Quit();
-//        TTF_Quit();
-//        SDL_DestroyTexture(tilesetTexture);
-//        SDL_DestroyRenderer(renderer);
-//        SDL_DestroyWindow(window);
-//
-//        SDL_Quit();
-//    }
-//};
-//
-//#endif
-
 #ifndef _GRAPHICS__H
 #define _GRAPHICS__H
 
@@ -263,6 +8,32 @@
 
 using json = nlohmann::json;
 using namespace std;
+
+struct Sprite {
+    SDL_Texture* texture;
+    vector<SDL_Rect> clips;
+    int currentFrame = 0;
+
+    void init(SDL_Texture* _texture, int frames, const int _clips [][4]) {
+        texture = _texture;
+
+        SDL_Rect clip;
+        for (int i = 0; i < frames; i++) {
+            clip.x = _clips[i][0];
+            clip.y = _clips[i][1];
+            clip.w = _clips[i][2];
+            clip.h = _clips[i][3];
+            clips.push_back(clip);
+        }
+    }
+    void tick() {
+        currentFrame = (currentFrame + 1) % clips.size();
+    }
+    const SDL_Rect* getCurrentClip() const {
+        return &(clips[currentFrame]);
+    }
+};
+
 
 struct Graphics {
     SDL_Renderer* renderer = nullptr;
@@ -297,6 +68,20 @@ struct Graphics {
         return textureCache[path];
     }
 
+    SDL_Texture* loadTextureWithColorKey(SDL_Renderer* renderer, const char* file, Uint8 r, Uint8 g, Uint8 b) {
+        SDL_Surface* tempSurface = IMG_Load(file);
+        if (!tempSurface) {
+            cout << "IMG_Load failed: " << IMG_GetError() << "\n";
+            return nullptr;
+        }
+
+        SDL_SetColorKey(tempSurface, SDL_TRUE, SDL_MapRGB(tempSurface->format, r, g, b));
+
+        SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, tempSurface);
+        SDL_FreeSurface(tempSurface);
+        return texture;
+    }
+
     void freeAllTextures() {
         for (auto& pair : textureCache) {
             SDL_DestroyTexture(pair.second);
@@ -323,15 +108,6 @@ struct Graphics {
         dest.y = y;
         SDL_QueryTexture(texture, NULL, NULL, &dest.w, &dest.h);
         SDL_RenderCopy(renderer, texture, NULL, &dest);
-    }
-
-    SDL_Texture* loadTexture(const char* filename) {
-        SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "Loading %s", filename);
-        SDL_Texture* texture = IMG_LoadTexture(renderer, filename);
-        if (texture == NULL) {
-            SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR, "Load texture %s", IMG_GetError());
-        }
-        return texture;
     }
 
     SDL_Texture* renderText(const char* text, TTF_Font* font, SDL_Color textColor) {
@@ -508,6 +284,15 @@ struct Graphics {
         if (window) SDL_DestroyWindow(window);
         SDL_Quit();
     }
+
+    void render(int x, int y, const Sprite& sprite, bool flip = false, double angle = 0.0) {
+        const SDL_Rect* clip = sprite.getCurrentClip();
+        SDL_Rect renderQuad = {x, y, clip->w, clip->h};
+        SDL_RendererFlip flipFlag = flip ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE;
+
+        SDL_RenderCopyEx(renderer, sprite.texture, clip, &renderQuad, angle, NULL, flipFlag);
+    }
+
 };
 
 #endif

@@ -2,7 +2,28 @@
 #define GAME_PLAY_H
 #include "game_state.h"
 
+void resetGame(Graphics &graphics, Mouse &mouse, int &score, SDL_Texture* &iscore,
+               TTF_Font* font, SDL_Color color_score,
+               Uint32 &startTime, Uint32 &totalPausedTime,
+               Uint32 &remainingTime, GameState &gameState)
+{
+    score = 0;
+    mouse.reset();
+
+    if (iscore) SDL_DestroyTexture(iscore);
+    iscore = graphics.renderText(to_string(score).c_str(), font, color_score);
+
+    graphics.layersData[graphics.diamond] = graphics.originalDiamondLayer;
+
+    startTime = SDL_GetTicks();
+    totalPausedTime = 0;
+
+    remainingTime = time_count_down(startTime, countdownTime, totalPausedTime) / 1000;
+    gameState = GAME_RUNNING;
+}
+
 void running_Main_Game(Graphics &graphics, Mouse &mouse, SDL_Texture* scoretxt, SDL_Texture* timetxt, TTF_Font* font) {
+
     GameState gameState;
     gameState = GAME_RUNNING;
     bool running = true;
@@ -49,18 +70,8 @@ void running_Main_Game(Graphics &graphics, Mouse &mouse, SDL_Texture* scoretxt, 
                 else if (gameState == GAME_OVER) {
                     if(event.key.keysym.scancode == SDL_SCANCODE_R)
                     {
-                        score = 0;
-                        mouse.x = SCREEN_WIDTH / 2;
-                        mouse.y = 752;
-                        SDL_DestroyTexture(iscore);
-                        iscore = graphics.renderText(to_string(score).c_str(), font, color_score);
-                        graphics.layersData[graphics.diamond] = graphics.originalDiamondLayer;
-                        startTime = SDL_GetTicks();
-                        remainingTime = time_count_down(startTime, countdownTime, totalPausedTime)/1000;
-                        totalPausedTime = 0;
-                        gameState = GAME_RUNNING;
+                        resetGame(graphics, mouse, score, iscore, font, color_score, startTime, totalPausedTime, remainingTime, gameState);
                     }
-
                 }
             }
         }
