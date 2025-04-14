@@ -135,7 +135,7 @@ struct Graphics {
         }
 
         tilesetTexture = getOrLoadTexture("mapmat.jpg");
-        tilesetDiamond = getOrLoadTexture("item.jpg");
+        tilesetDiamond = loadTextureWithColorKey(renderer, "item.jpg", 0, 0, 0);
 
         if (!loadMap("mapprj.tmj")) {
             logErrorAndExit("Load Map Failed", "");

@@ -51,7 +51,7 @@ void handleAllEvents(Graphics &graphics, Mouse &mouse, ScreenState &currentScree
     }
 }
 
-void renderScreen(ScreenState &currentScreen, ModeState &currentMode, Graphics &graphics, Mouse &mouse,
+void renderScreen(ScreenState &currentScreen, ModeState &currentMode, Graphics &graphics, Mouse &mouse, vector<Laser>& lasers, vector<Enemy>& enemies,
                   SDL_Texture* scoretxt, SDL_Texture* timetxt, TTF_Font* font, SDL_Texture* backgroundTexture, bool &run) {
     if (currentScreen == SCREEN_QUIT) {
         run = false;
@@ -67,14 +67,10 @@ void renderScreen(ScreenState &currentScreen, ModeState &currentMode, Graphics &
             break;
         case SCREEN_GAME:
             resetTimer();
-            running_Main_Game(graphics, mouse, scoretxt, timetxt, font);
+            running_Main_Game(graphics, mouse, lasers, enemies, scoretxt, timetxt, font);
             graphics.layersData[graphics.diamond] = graphics.originalDiamondLayer;
             mouse.x = X_SPAWN;
             mouse.y = Y_SPAWN;
-            currentScreen = SCREEN_MENU;
-            break;
-        case SCREEN_HELP:
-            cout << "Hướng dẫn sử dụng...\n";
             currentScreen = SCREEN_MENU;
             break;
         default:
@@ -83,7 +79,7 @@ void renderScreen(ScreenState &currentScreen, ModeState &currentMode, Graphics &
 
 }
 
-void run_Game(Graphics &graphics, Mouse &mouse, SDL_Texture* scoretxt, SDL_Texture* timetxt, TTF_Font* font, SDL_Texture* backgroundTexture) {
+void run_Game(Graphics &graphics, Mouse &mouse, vector<Laser>& lasers, vector<Enemy>& enemies, SDL_Texture* scoretxt, SDL_Texture* timetxt, TTF_Font* font, SDL_Texture* backgroundTexture) {
     graphics.cacheRenderMap();
     ScreenState currentScreen = SCREEN_MENU;
     ModeState currentMode = STATE_MODE;
@@ -94,7 +90,7 @@ void run_Game(Graphics &graphics, Mouse &mouse, SDL_Texture* scoretxt, SDL_Textu
         while (SDL_PollEvent(&event)) {
             handleAllEvents(graphics, mouse, currentScreen, currentMode, event, run);
         }
-        renderScreen(currentScreen, currentMode, graphics, mouse, scoretxt, timetxt, font, backgroundTexture, run);
+        renderScreen(currentScreen, currentMode, graphics, mouse, lasers, enemies, scoretxt, timetxt, font, backgroundTexture, run);
     }
 }
 

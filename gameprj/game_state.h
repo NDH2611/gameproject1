@@ -1,9 +1,15 @@
-#ifndef _GAME__STATE__H
-#define _GAME__STATE__H
+
+#ifndef GAME_STATE_H
+#define GAME_STATE_H
+
+#include "graphics.h"
+#include "laser.h"
+#include "enemy.h"
 
 enum GameState { GAME_RUNNING, GAME_OVER, GAME_PAUSED };
 
-void renderGameState(Graphics &graphics, Mouse &mouse, SDL_Texture* scoretxt, SDL_Texture* timetxt, TTF_Font* font,
+void renderGameState(Graphics &graphics, Mouse &mouse, vector<Laser>& lasers, vector<Enemy>& enemies,
+                     SDL_Texture* scoretxt, SDL_Texture* timetxt, TTF_Font* font,
                      GameState gameState, SDL_Texture* iscore, SDL_Texture* iTime) {
     SDL_RenderClear(graphics.renderer);
     graphics.renderMap();
@@ -12,6 +18,9 @@ void renderGameState(Graphics &graphics, Mouse &mouse, SDL_Texture* scoretxt, SD
     graphics.renderTexture(timetxt, 670, 775);
     graphics.renderTexture(iTime, 750, 775);
     render(mouse, graphics);
+    renderEnemies(graphics, enemies);
+    updateLasers(lasers, graphics);
+    renderLasers(lasers, graphics.renderer, graphics.textureCache["zoltraak"]);
 
     const char* stateMessage = nullptr;
     SDL_Color color = {255, 255, 255, 255};
@@ -19,8 +28,7 @@ void renderGameState(Graphics &graphics, Mouse &mouse, SDL_Texture* scoretxt, SD
     if (gameState == GAME_PAUSED) {
         stateMessage = "PAUSED";
         color = {255, 255, 0, 255};
-    }
-    else if (gameState == GAME_OVER) {
+    } else if (gameState == GAME_OVER) {
         stateMessage = "GAME OVER";
         color = {255, 0, 0, 255};
     }
@@ -40,7 +48,4 @@ void renderGameState(Graphics &graphics, Mouse &mouse, SDL_Texture* scoretxt, SD
     SDL_RenderPresent(graphics.renderer);
 }
 
-
-
 #endif
-

@@ -6,7 +6,6 @@
 enum ScreenState {
     SCREEN_MENU,
     SCREEN_GAME,
-    SCREEN_HELP,
     SCREEN_MODE,
     SCREEN_QUIT
 };
@@ -19,10 +18,9 @@ struct MenuButton {
 
 
 const vector<MenuButton> menuButtons = {
-    {{330, 200, 150, 50}, "Play", SCREEN_GAME},
-    {{330, 270, 150, 50}, "HELP", SCREEN_HELP},
-    {{330, 340, 150, 50}, "MODE", SCREEN_MODE},
-    {{330, 410, 150, 50}, "QUIT", SCREEN_QUIT}
+    {{330, 230, 150, 50}, "Play", SCREEN_GAME},
+    {{330, 300, 150, 50}, "MODE", SCREEN_MODE},
+    {{330, 370, 150, 50}, "QUIT", SCREEN_QUIT}
 };
 
 
