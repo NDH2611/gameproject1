@@ -102,10 +102,8 @@ void enemy_move(Graphics& graphics, Mouse& mouse, vector<Enemy>& enemies) {
         int distance = sqrt(dx * dx + dy * dy);
 
         if (distance <= CHASE_RANGE && !checkWallBetween(e.x, e.y, mouse.x, mouse.y, graphics)) {
-            //e.x += (dx != 0) ? (dx > 0 ? adjustedMoveSpeed : -adjustedMoveSpeed) : 0;
-            //e.y += (dy != 0) ? (dy > 0 ? adjustedMoveSpeed : -adjustedMoveSpeed) : 0;
-            e.x += (dx != 0) ? std::copysign(adjustedMoveSpeed, dx) : 0;
-            e.y += (dy != 0) ? std::copysign(adjustedMoveSpeed, dy) : 0;
+            e.x += (dx != 0) ? copysign(adjustedMoveSpeed, dx) : 0;
+            e.y += (dy != 0) ? copysign(adjustedMoveSpeed, dy) : 0;
         }
         else {
             int dirX = rand() % (2 * MOVE_SPEED + 1) - MOVE_SPEED;

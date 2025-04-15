@@ -2,9 +2,9 @@
 <CodeBlocks_layout_file>
 	<FileVersion major="1" minor="0" />
 	<ActiveTarget name="Debug" />
-	<File name="player_move.h" open="1" top="1" tabpos="9" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="game_play.h" open="1" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="2" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="2167" topLine="36" />
+			<Cursor1 position="4709" topLine="18" />
 		</Cursor>
 	</File>
 	<File name="mode.h" open="1" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -12,14 +12,9 @@
 			<Cursor1 position="221" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="game_play.h" open="1" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="2" zoom_2="0">
+	<File name="game.h" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="1" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="4709" topLine="18" />
-		</Cursor>
-	</File>
-	<File name="graphics.h" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="2997" topLine="263" />
+			<Cursor1 position="3067" topLine="62" />
 		</Cursor>
 	</File>
 	<File name="time.h" open="1" top="0" tabpos="12" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -27,24 +22,9 @@
 			<Cursor1 position="481" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="laser.h" open="1" top="0" tabpos="11" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="graphics.h" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="2794" topLine="3" />
-		</Cursor>
-	</File>
-	<File name="lootitem.h" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="2" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="708" topLine="4" />
-		</Cursor>
-	</File>
-	<File name="game_state.h" open="1" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="511" topLine="10" />
-		</Cursor>
-	</File>
-	<File name="menu.h" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="1" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1549" topLine="13" />
+			<Cursor1 position="4867" topLine="122" />
 		</Cursor>
 	</File>
 	<File name="main.cpp" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -52,19 +32,39 @@
 			<Cursor1 position="1017" topLine="30" />
 		</Cursor>
 	</File>
-	<File name="game.h" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="1" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="3067" topLine="66" />
-		</Cursor>
-	</File>
 	<File name="defs.h" open="1" top="0" tabpos="13" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1215" topLine="0" />
+			<Cursor1 position="434" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="enemy.h" open="1" top="0" tabpos="10" split="0" active="1" splitpos="0" zoom_1="2" zoom_2="0">
+	<File name="menu.h" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="1" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1942" topLine="48" />
+			<Cursor1 position="152" topLine="3" />
+		</Cursor>
+	</File>
+	<File name="player_move.h" open="1" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="2167" topLine="36" />
+		</Cursor>
+	</File>
+	<File name="enemy.h" open="1" top="1" tabpos="10" split="0" active="1" splitpos="0" zoom_1="2" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="3013" topLine="87" />
+		</Cursor>
+	</File>
+	<File name="lootitem.h" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="2" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="708" topLine="4" />
+		</Cursor>
+	</File>
+	<File name="laser.h" open="1" top="0" tabpos="11" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="2822" topLine="103" />
+		</Cursor>
+	</File>
+	<File name="game_state.h" open="1" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="511" topLine="10" />
 		</Cursor>
 	</File>
 </CodeBlocks_layout_file>
