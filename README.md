@@ -10,7 +10,10 @@
 Ngưỡng điểm: 8 - 9
 
 Các animation tự vẽ bao gồm: player, quái, laser, map
+
 Các khác lấy trên mạng nhưng không nhớ rõ link: Background menu, các tileset. 
+
+Để đọc file loại json (tmj): https://github.com/nlohmann/json/releases
 
 Nguồn tham khảo code: code mẫu của cô về 1 số hàm cơ bản, có dùng AI để cải thiện code dùng tốt hơn, học 1 số kiến thức cần thiết, có 1 số cái khó nhờ AI gợi ý 
 phương án giải quyết.
