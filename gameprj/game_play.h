@@ -17,7 +17,6 @@ void DeadByEnemy (Graphics& graphics, GameState& gameState, Mouse &mouse, vector
             return;
         }
     }
-
 }
 
 void updateGameState(Graphics& graphics, Mouse& mouse, vector<Laser>& lasers, vector<Enemy>& enemies,

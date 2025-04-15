@@ -12,7 +12,7 @@ const int Time_ASIAN = 10;
 const char* WINDOW_TITLE = "NDH's Game";
 const int X_SPAWN = SCREEN_WIDTH / 2;
 const int Y_SPAWN = 735;
-const int Num_Enemy = 5;
+const int Num_Enemy = 15;
 
 const char* MAN_SPRITE_FILE = "img\\bo_hong.png";
 const char* MAN_SPRITE_UP_FILE = "img\\bo_hong_up.png";
