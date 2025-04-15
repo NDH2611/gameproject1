@@ -8,6 +8,7 @@
   số điểm cao nhất có thể. Game có 3 chế độ từ dễ đến khó cho bạn tùy chọn.
   
 Ngưỡng điểm: 8 - 9
+
 Các animation tự vẽ bao gồm: player, quái, laser, map
 Các khác lấy trên mạng nhưng không nhớ rõ link: Background menu, các tileset. 
 
